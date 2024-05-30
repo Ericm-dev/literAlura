@@ -84,7 +84,3 @@ Las contribuciones son lo que hace que la comunidad de código abierto sea un lu
 3. Realiza tu Commit con los Cambios (git commit -m 'Add some AmazingFeature').
 4. Haz Push a la Rama (git push origin feature/AmazingFeature).
 5. Abre una Pull Request.
-   
-## Licencia
-Distribuido bajo la Licencia MIT. Consulta el archivo LICENSE para más información.
-  
