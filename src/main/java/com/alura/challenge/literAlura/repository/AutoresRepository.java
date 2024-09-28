@@ -10,5 +10,4 @@ import java.util.List;
 public interface AutoresRepository extends JpaRepository<Autores, Long> {
     @Query("SELECT a FROM Autores a WHERE a.fechaNacimiento <= :anio AND (a.fechaFallecimiento IS NULL OR a.fechaFallecimiento >= :anio)")
     List<Autores> findAutoresVivosPorAnio(@Param("anio") int anio);
-
 }

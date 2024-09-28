@@ -3,7 +3,7 @@ package com.alura.challenge.literAlura.model;
 import jakarta.persistence.*;
 
 import java.util.List;
-import java.util.stream.Collectors;
+
 @Entity
 @Table(name = "libros")
 public class Libros {
@@ -22,21 +22,6 @@ public class Libros {
     private Double numeroDeDescargas;
 
     public Libros() {}
-
-    public Libros(DatosLibros datosLibros) {
-        this.titulo = datosLibros.titulo();
-        this.autores = datosLibros.autor().stream()
-                .map(datosAutor -> {
-                    Autores autor = new Autores(datosAutor);
-                    autor.setLibro(this);
-                    return autor;
-                })
-                .collect(Collectors.toList());
-        String idiomaConCorchetes = datosLibros.idiomas().toString();
-        String idiomaSinCorchetes = idiomaConCorchetes.replace("[", "").replace("]", "");
-        this.idiomas = idiomaSinCorchetes;
-        this.numeroDeDescargas = datosLibros.numeroDeDescargas();
-    }
 
     // Getters y setters
     public Long getId() {
@@ -79,13 +64,5 @@ public class Libros {
         this.numeroDeDescargas = numeroDeDescargas;
     }
 
-    @Override
-    public String toString() {
-        return  "Libro " + " " +
-                "Titulo: " + titulo + " " +
-                "Autor: " + autores + " " +
-                "Idioma: " + idiomas + " " +
-                "Numero De Descargas: " + numeroDeDescargas;
-    }
 }
 

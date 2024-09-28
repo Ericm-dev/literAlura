@@ -1,12 +1,15 @@
 package com.alura.challenge.literAlura.principal;
 
+import com.alura.challenge.literAlura.dto.DatosApiDto;
+import com.alura.challenge.literAlura.dto.DatosAutorDto;
+import com.alura.challenge.literAlura.dto.DatosLibrosDto;
 import com.alura.challenge.literAlura.model.*;
 import com.alura.challenge.literAlura.repository.AutoresRepository;
 import com.alura.challenge.literAlura.repository.LibrosRepository;
-import com.alura.challenge.literAlura.service.ConsumoAPI;
-import com.alura.challenge.literAlura.service.ConvierteDatos;
+import com.alura.challenge.literAlura.service.ConsumoDeAPI;
+import com.alura.challenge.literAlura.service.ConvertirLibro;
+import com.alura.challenge.literAlura.service.ConvierteDatosDeAPI;
 
-import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 import java.util.Scanner;
@@ -14,8 +17,8 @@ import java.util.stream.Collectors;
 
 public class Principal {
     private static final String URL_BASE = "https://gutendex.com/books/";
-    private ConsumoAPI consumoAPI = new ConsumoAPI();
-    private ConvierteDatos conversor = new ConvierteDatos();
+    private ConsumoDeAPI consumoAPI = new ConsumoDeAPI();
+    private ConvierteDatosDeAPI conversor = new ConvierteDatosDeAPI();
     private Scanner teclado = new Scanner(System.in);
     private int opcion;
     private LibrosRepository librosRepositorio;
@@ -37,8 +40,8 @@ public class Principal {
             **-------------------------------------------------**
             """;
 
-    public Principal(LibrosRepository repository, AutoresRepository autoresRepository) {
-        this.librosRepositorio = repository;
+    public Principal(LibrosRepository librosRepository, AutoresRepository autoresRepository) {
+        this.librosRepositorio = librosRepository;
         this.autoresRepositorio = autoresRepository;
     }
 
@@ -77,19 +80,19 @@ public class Principal {
         } while (opcion != 0);
     }
 
-    private Optional<DatosLibros> buscarLibroPorTitulo() {
+    private Optional<DatosLibrosDto> buscarLibroPorTitulo() {
         System.out.println("Ingrese el nombre del libro que desea buscar");
         var tituloLibro = teclado.nextLine();
         String json = consumoAPI.obtenerDatos(URL_BASE + "?search=" + tituloLibro.replace(" ", "+"));
-        var datosBusqueda = conversor.obtenerDatos(json, Datos.class);
+        var datosBusqueda = conversor.obtenerDatos(json, DatosApiDto.class);
 
-        Optional<DatosLibros> libroBuscado = datosBusqueda.resultados().stream()
+        Optional<DatosLibrosDto> libroBuscado = datosBusqueda.resultados().stream()
                 .filter(l -> l.titulo().toUpperCase().contains(tituloLibro.toUpperCase()))
                 .findFirst();
         if(libroBuscado.isPresent()){
-            DatosLibros libroEncontrado = libroBuscado.get();
+            DatosLibrosDto libroEncontrado = libroBuscado.get();
             String autor = libroEncontrado.autor().stream()
-                    .map(DatosAutor::nombre)
+                    .map(DatosAutorDto::nombre)
                     .findFirst()
                     .orElse("Autor desconocido"); // Si no hay autor, muestra "Autor desconocido"
 
@@ -109,15 +112,15 @@ public class Principal {
     }
 
     private void buscarYGuardarEnBBDD() {
-        Optional<DatosLibros> datos = buscarLibroPorTitulo();
+        Optional<DatosLibrosDto> datos = buscarLibroPorTitulo();
         if (datos.isPresent()) {
-            DatosLibros datosLibros = datos.get();
+            DatosLibrosDto datosLibros = datos.get();
             boolean existe = librosRepositorio.existsByTitulo(datosLibros.titulo());
             if (existe) {
                 System.out.println("El libro ya existe en la base de datos: " + datosLibros.titulo());
                 System.out.println();
             } else {
-                Libros libro = new Libros(datosLibros);
+                Libros libro = ConvertirLibro.convertToEntity(datosLibros);
                 librosRepositorio.save(libro);
                 System.out.println("Libro guardado en la base de datos.");
                 System.out.println();

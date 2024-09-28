@@ -8,7 +8,6 @@ public class Autores {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
     private String nombre;
     private String fechaNacimiento;
     private String fechaFallecimiento;
@@ -16,15 +15,6 @@ public class Autores {
     @ManyToOne
     private Libros libro;
 
-    public Autores() {}
-
-    public Autores(DatosAutor datosAutor) {
-        this.nombre = datosAutor.nombre();
-        this.fechaNacimiento = datosAutor.fechaNacimiento();
-        this.fechaFallecimiento = datosAutor.fechaFallecimiento();
-    }
-
-    // Getters y setters
     public Long getId() {
         return id;
     }
@@ -64,13 +54,4 @@ public class Autores {
     public void setLibro(Libros libro) {
         this.libro = libro;
     }
-
-    @Override
-    public String toString() {
-        return  "Autores" + " " +
-                "Nombre: " + nombre + " " +
-                "Fecha de nacimiento: " + fechaNacimiento + " " +
-                "Fecha de fallecimiento: " + fechaFallecimiento;
-    }
-
 }
