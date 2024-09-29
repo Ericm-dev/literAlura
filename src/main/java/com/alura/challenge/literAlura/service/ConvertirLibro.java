@@ -14,14 +14,14 @@ public class ConvertirLibro {
         libros.setTitulo(datosLibros.titulo());
         libros.setAutores(datosLibros.autor().stream()
                 .map(datosAutor -> {
-                    Autores autor = new Autores();  // Crear una nueva instancia de Autor
-                    autor.setNombre(datosAutor.nombre());  // Asignar el nombre correcto del autor
+                    Autores autor = new Autores();
+                    autor.setNombre(datosAutor.nombre());
                     autor.setFechaNacimiento(datosAutor.fechaNacimiento());
                     autor.setFechaFallecimiento(datosAutor.fechaFallecimiento());
                     autor.setLibro(libros);
-                    return autor;  // Devolver la nueva instancia de Autor
+                    return autor;
                 })
-                .collect(Collectors.toList()));  // Convertir el Stream en una lista y asignarla a libros
+                .collect(Collectors.toList()));
 
         String idiomaConCorchetes = datosLibros.idiomas().toString();
         String idiomaSinCorchetes = idiomaConCorchetes.replace("[", "").replace("]", "");
