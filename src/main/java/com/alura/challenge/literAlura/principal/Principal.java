@@ -10,6 +10,7 @@ import com.alura.challenge.literAlura.service.ConsumoDeAPI;
 import com.alura.challenge.literAlura.service.ConvertirLibro;
 import com.alura.challenge.literAlura.service.ConvierteDatosDeAPI;
 
+import java.util.InputMismatchException;
 import java.util.List;
 import java.util.Optional;
 import java.util.Scanner;
@@ -45,8 +46,7 @@ public class Principal {
         this.autoresRepositorio = autoresRepository;
     }
 
-    public void muestraElMenu(){
-
+    public void menuBiblioteca() {
         do {
             System.out.println(menu);
             opcion = teclado.nextInt();
@@ -78,6 +78,26 @@ public class Principal {
                     System.out.println("Opción inválida, vuelva a intentar");
             }
         } while (opcion != 0);
+    }
+
+    public void muestraElMenu(){
+        boolean continuar = true;
+        while (continuar) {
+            try {
+                menuBiblioteca();
+            } catch (InputMismatchException e) {
+                System.out.println("No puedes poner letras. Selecciona una opción válida.\n");
+                teclado.nextLine();
+            }
+
+            System.out.println("¿Deseas continuar en el menú? (S/N)");
+            String respuesta = teclado.nextLine().toUpperCase();
+            if (!respuesta.equals("S")) {
+                continuar = false;
+            }
+        }
+
+        System.out.println("¡Gracias por usar la biblioteca!");
     }
 
     private Optional<DatosLibrosDto> buscarLibroPorTitulo() {
