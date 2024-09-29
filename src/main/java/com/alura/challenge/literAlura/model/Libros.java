@@ -23,7 +23,6 @@ public class Libros {
 
     public Libros() {}
 
-    // Getters y setters
     public Long getId() {
         return id;
     }
